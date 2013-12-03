@@ -45,29 +45,28 @@ class MainHandler(webapp2.RequestHandler):
 
 class TaskHandler(webapp2.RequestHandler):
 	def put(self,id):
-		todo_key = ndb.Key('Todo',int(id))
-		if todo_key.get() != None:
+		todo = ndb.Key('Todo',int(id)).get()
+		if todo == None:
 			res_dict = dict()
 			res_dict['error_code'] = 500
 			res_dict['description'] = 'Try to delete not existed entity!'
 			txt = json.dumps(res_dict)
 			self.response.status_int = 500
+			self.response.headers['Content-Type'] = 'application/json'
 			self.response.write(txt)
-			return None
-
-		todo = todo_key.get()
-		if self.request.get('description') != '':
-			todo.description = self.request.get('description')
-
-		if self.request.get('completed').lower == 'false':
-			todo.completed = False
 		else:
-			todo.completed = True
+			if self.request.get('description') != '':
+				todo.description = self.request.get('description')
 
-		todo_dict = todo.put()
-		self.response.status_int = 200
-		self.response.headers['Content-Type'] = 'application/json'
-		self.response.write(json.dumps(todo_dict))
+			if self.request.get('completed').lower == 'false':
+				todo.completed = False
+			else:
+				todo.completed = True
+
+			todo_dict = todo.put()
+			self.response.status_int = 200
+			self.response.headers['Content-Type'] = 'application/json'
+			self.response.write(json.dumps(todo_dict))
 
 	def delete(self,id):
 		todo_key = ndb.Key('Todo',int(id))
@@ -80,6 +79,7 @@ class TaskHandler(webapp2.RequestHandler):
 			res_dict['description'] = 'Try to delete not existed entity!'
 			txt = json.dumps(res_dict)
 			self.response.status_int = 500
+			self.response.headers['Content-Type'] = 'application/json'
 			self.response.write(txt)
 
 
