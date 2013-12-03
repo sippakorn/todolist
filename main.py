@@ -58,7 +58,7 @@ class TaskHandler(webapp2.RequestHandler):
 			if self.request.get('description') != '':
 				todo.description = self.request.get('description')
 
-			if self.request.get('completed').lower == 'false':
+			if self.request.get('completed').lower() == 'false':
 				todo.completed = False
 			else:
 				todo.completed = True
