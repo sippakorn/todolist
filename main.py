@@ -25,7 +25,7 @@ class Todo(ndb.Model):
 
 	def put(self):
 		self.description = self.description.replace("+"," ")
-		todo_key = super(Todo,self).put()
+		super(Todo,self).put()
 		return self.__dict()
 
 	def get(self):
